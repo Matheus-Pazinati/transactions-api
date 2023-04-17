@@ -1,5 +1,5 @@
 import { knex as setupKnex, Knex } from 'knex'
-import { env } from './.env/index'
+import { env } from './env/index'
 
 export const knexConfig: Knex.Config = {
   client: 'sqlite',
