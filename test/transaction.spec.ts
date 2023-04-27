@@ -10,7 +10,7 @@ afterAll( async () => {
   await app.close()
 })
 
-test('should return the list of transactions', async () => {
+test('should create new transaction', async () => {
   await request(app.server)
     .post('/transactions')
     .send({
