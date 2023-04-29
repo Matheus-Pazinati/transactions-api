@@ -79,5 +79,34 @@ describe('Transactions routes', () => {
       })
     )
   })
+
+  it ('should list the summary of transactions', async () => {
+    const creditTransactionResponse = await request(app.server)
+    .post('/transactions')
+    .send({
+      title: 'Credit transaction',
+      amount: 4000,
+      type: 'credit'
+    })
+
+    const cookies = creditTransactionResponse.headers['set-cookie']
+
+    await request(app.server)
+    .post('/transactions')
+    .set("Cookie", cookies)
+    .send({
+      title: 'Debt transaction',
+      amount: 1000,
+      type: 'debt'
+    })
+
+    const summaryTransactionsResponse = await request(app.server)
+      .get('/transactions/summary')
+      .set("Cookie", cookies)
+
+      expect(summaryTransactionsResponse.body.summary).toEqual({
+        amount: 3000
+      })
+  })
 })
 
