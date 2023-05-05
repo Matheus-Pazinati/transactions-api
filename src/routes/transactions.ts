@@ -74,4 +74,21 @@ export async function transactionsRoutes(app: FastifyInstance) {
 
     return { summary }
   })
+
+  app.delete('/:id', {preHandler: [checkSessionId]}, async (request, reply) => {
+    const RequestParamsSchema = z.object({
+      id: z.string().uuid()
+    })
+
+    const { id } = RequestParamsSchema.parse(request.params)
+    const { sessionId } = request.cookies
+
+    await knex('transactions').where({
+      session_id: sessionId,
+      id
+    })
+    .del()
+
+    return reply.status(204).send()
+  })
 }
