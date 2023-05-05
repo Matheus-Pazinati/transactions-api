@@ -108,5 +108,28 @@ describe('Transactions routes', () => {
         amount: 3000
       })
   })
+
+  it ('should delete a transaction by id', async () => {
+    const createTransactionResponse = await request(app.server)
+    .post('/transactions')
+    .send({
+      title: 'Air Fryer',
+      amount: 400,
+      type: 'debt'
+    })
+
+    const cookies = createTransactionResponse.headers['set-cookie']
+
+    const listTransactionsResponse = await request(app.server)
+      .get('/transactions')
+      .set("Cookie", cookies)
+
+    const transactionId = listTransactionsResponse.body.transactions[0].id
+
+    await request(app.server)
+    .delete(`/transactions/${transactionId}`)
+    .set("Cookie", cookies)
+    .expect(204)
+  })
 })
 
