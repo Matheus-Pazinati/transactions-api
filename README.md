@@ -37,7 +37,7 @@
 <br>
 <h2>📌 Funcionalidades a serem implementadas</h2>
 <ul>
-  <li>Criar uma rota para deletar uma transação (somente o usuário que criou a transação pode deleta-la)</li>
+  <li>Criar uma rota para deletar uma transação (somente o usuário que criou a transação pode deleta-la) - Ok ✔️</li>
   <li>Criar uma rota para alterar uma transação (somente o usuário que criou a transação pode altera-la)</li>
 </ul>
 <br>
