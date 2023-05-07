@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify"
 import { knex } from '../database'
-import { z } from 'zod'
+import { optional, z } from 'zod'
 import { randomUUID } from 'node:crypto'
 import { checkSessionId } from "../middlewares/check-session-id"
 
@@ -88,6 +88,50 @@ export async function transactionsRoutes(app: FastifyInstance) {
       id
     })
     .del()
+
+    return reply.status(204).send()
+  })
+
+  app.put('/:id', {preHandler: [checkSessionId]}, async (request, reply) => {
+
+    const TransactionRequestBodySchema = z.object({
+      title: z.string().optional(),
+      amount: z.number().optional(),
+      type: z.enum(['credit', 'debt']).optional()
+    })
+
+    const RequestParamsSchema = z.object({
+      id: z.string().uuid()
+    })
+
+    const updatedFields = TransactionRequestBodySchema.parse(request.body) 
+
+    const { id } = RequestParamsSchema.parse(request.params)
+    const { sessionId } = request.cookies
+
+    const selectedTransaction = await knex('transactions').where({
+      session_id: sessionId,
+      id
+    })
+
+    const typeOfTransaction = selectedTransaction[0].amount > 0 ? "credit" : "debt"
+
+    if (updatedFields.type !== typeOfTransaction) {
+      selectedTransaction[0].amount *= -1
+    }
+
+    if (updatedFields.amount) {
+      updatedFields.amount = updatedFields.type === "credit" ? updatedFields.amount : updatedFields.amount! * -1
+    }
+    
+    await knex('transactions').where({
+      session_id: sessionId,
+      id
+    })
+    .update({
+      title: updatedFields.title !== undefined ? updatedFields.title : selectedTransaction[0].title,
+      amount: updatedFields.amount !== undefined ? updatedFields.amount : selectedTransaction[0].amount
+    })
 
     return reply.status(204).send()
   })
