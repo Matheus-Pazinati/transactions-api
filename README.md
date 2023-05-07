@@ -32,7 +32,10 @@
     <li>Criar uma nova transação: <strong>Rota:</strong> /transactions | <strong>Método:</strong> PUT | <strong>Body da Requisição:</strong> title, amount e type</li>
     <li>Listar todas as transações de um usuário: <strong>Rota:</strong> /transactions | <strong>Método:</strong> GET </li>
     <li>Listar uma transação específica: <strong>Rota:</strong> /transactions/:id | <strong>Método:</strong> GET</li>
+    <li>Deletar uma transação específica: <strong>Rota:</strong> /transactions/:id | <strong>Método:</strong> DELETE</li>
+     <li>Editar uma transação específica: <strong>Rota:</strong> /transactions/:id | <strong>Método:</strong> PUT | <strong>Body da Requisição:</strong> title, amount ou type</li>
     <li>Buscar o resumo das transações (Diferença entre Entradas e Saídas): <strong>Rota:</strong> /transactions/summary | <strong>Método:</strong> GET</li>
+    
   </ul>
 <br>
 <h2>📌 Funcionalidades a serem implementadas</h2>
