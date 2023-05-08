@@ -131,5 +131,44 @@ describe('Transactions routes', () => {
     .set("Cookie", cookies)
     .expect(204)
   })
+
+  it ('should update a transaction by id', async () => {
+    const createTransactionResponse = await request(app.server)
+    .post('/transactions')
+    .send({
+      title: 'Bonus',
+      amount: 400,
+      type: 'credit'
+    })
+
+    const cookies = createTransactionResponse.headers['set-cookie']
+
+    const listTransactionsResponse = await request(app.server)
+      .get('/transactions')
+      .set("Cookie", cookies)
+
+    const transactionId = listTransactionsResponse.body.transactions[0].id
+
+    await request(app.server)
+    .put(`/transactions/${transactionId}`)
+    .send({
+      title: 'Salary',
+      amount: 3000
+    })
+    .set("Cookie", cookies)
+
+    const newTransaction = await request(app.server)
+    .get(`/transactions/${transactionId}`)
+    .set("Cookie", cookies)
+
+
+    expect(newTransaction.body.transaction).toEqual(
+      expect.objectContaining({
+        title: 'Salary',
+        amount: 3000
+      })
+    )
+
+  })
 })
 
