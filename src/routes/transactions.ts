@@ -116,12 +116,14 @@ export async function transactionsRoutes(app: FastifyInstance) {
 
     const typeOfTransaction = selectedTransaction[0].amount > 0 ? "credit" : "debt"
 
-    if (updatedFields.type !== typeOfTransaction) {
-      selectedTransaction[0].amount *= -1
+    if (updatedFields.type) {
+      if (updatedFields.type !== typeOfTransaction) {
+        selectedTransaction[0].amount *= -1
+      }
     }
 
     if (updatedFields.amount) {
-      updatedFields.amount = updatedFields.type === "credit" ? updatedFields.amount : updatedFields.amount! * -1
+      updatedFields.amount = updatedFields.type === "debt" ? updatedFields.amount! * -1 : updatedFields.amount
     }
     
     await knex('transactions').where({
